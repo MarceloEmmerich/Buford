@@ -1,18 +1,90 @@
 Buford - Multi-Agent Development System 
 
-> A Claude-based multi-agent system designed for specification-driven development.
+> A minimalistic Claude-based multi-agent system designed for specification-driven development.
 
 ![Buford Avatar](buford.png)
 
 ## Overview
 
-Buford is a structured multi-agent system built on Claude that enforces a strict specification-first workflow. Named after the internet meme dog, Buford coordinates between specialized agents to ensure clean, documented, and maintainable code development.
+Buford is a structured multi-agent system built on Claude Code that enforces a strict specification-first workflow. Named after the internet meme dog, Buford coordinates between specialized agents to ensure clean, documented, and maintainable code development.
+
+## Target Projects
+
+Buford works best for small to mid size projects. 
+
+## Dependencies
+
+Buford has very little dependencies:
+- Claude Code (althoug it is very easy to adapt to other ai coding tools)
+- git
+- bash
+
+See the [History](#history) section below for more details on how this came to life.
+
 
 ### Core Philosophy
-- **Code is written to be read by humans** - prioritizing clarity and understanding
-- **Specification-driven development** - no implementation without approved specs
-- **Intentional Context Layering (ICL)** - maintaining rich context for future development
-- **Anti-documentation rot** - keeping docs current and expanding when necessary
+- **Strictly Spec-Driven** - Ideally you do not have to manually write code anymore, and very rarely read it. All interaction is handled through specifications.
+- **Human-In-The-Loop Approach** - buford does not attempt to automate development completely. It deliberately asks the user for approval at certain points (see Workflow below)
+- **Optimized for Context** - File based context system to avoid hallucinations (see [History](#history) for details)
+
+### History
+
+In the beginning of 2025, I was working as a contractor for a large household device manufacturer. My job was to work on the ultimate ai assisted developer workflow. I read every paper and every blog I could find about programming with AI. This broad analysis resulted in a number of key insights:
+
+1. Try to avoid using more than 40% of the context window of any LLM. That's the decay threshold. After that, pretty much all LLM start to hallucinate of at least fail to find specific "needles in the haystack". The following insights are an immediate result of this:
+   * Using subagents is a viable way to reduce context, since each subagent has it's own context window
+   * Developing in short iterations keeps the context small
+2. A memory system is a must. It greatly reduces the amount of context and also increases speed and correctness. Without a memory system, the LLM starts each task by grepping through all files trying to find context.
+3. Specs are the new programming language. Handle LLM like a spec compiler.
+4. Specs are the new programming language. Be methodical when writing specs. Here are just a few tips :
+   * Use a DSL (Domain Specific Language). If you call a thing "Foo" in one spec, call it "Foo" in all subsequent ones, and do not wonder about bad results if you call it "Bar".
+   * An LLM is trained to produce. If you want it to not produce in certain cases, you have to be explicit about it. 
+5. Be mindful of MCP servers:
+   * MCP servers add tools or function calling to the LLM. It might be tempting to add a lot of MCP servers. Do not do it. Research clearly shows that having too many tool to call confuses the LLM (sweet spot seems to be below 20 tool calls). Subagents can mitigate this, i.e. restricting certain MCP servers to certain subagents.
+   * MCP servers are slow. For example, I prefer to allow buford to use git from the CLI instead of using a github MCP server. It's so much faster.
+   * MCP servers have security and privacy issues. Make sure that you trust the MCP servers you are using.
+
+Anyway, all this work resulted in a complex setup with multiple subagents, MCP servers, semantic RAG systems, a Graph database for finding all kinds of relations between code and files and entities, etc.
+
+It worked, but was "heavy". Most small- to mid-sized projects do not want to have to run a postgresql and a neo4j instance just to be able to do their daily development work.
+
+That's when Buford was born. It is a drastic simplification of the above system. it uses only the file system for context and specs, has no MCP server per default, and uses the git CLI to generate commits through a Claude Code custom command. 
+
+## ICL format
+The **ICL (Intentional Context Log) format** is a structured markdown file used to capture the context, decisions, and rationale behind significant development milestones. Each ICL file is timestamped and stored in `specs/context/`. The format ensures traceability and helps agents (and humans) understand why and how changes were made.
+
+### ICL File Structure
+
+Each ICL file follows the template below:
+
+```markdown
+# Intentional Context Summary
+
+## Metadata
+- **Timestamp:** {ISO8601}
+- **Author/Agent:** {agent_name}
+- **Task / Intent:** {description}
+
+## Key Decisions
+- List major decisions made during this milestone.
+
+## Implementation Summary
+- Summarize what was implemented or changed.
+
+## References
+- Link to related specs, research, or code.
+
+## Next Steps / Open Questions
+- List pending actions or unresolved issues.
+```
+
+**Key points:**
+- **One ICL per milestone:** Create a new ICL after each significant implementation or decision.
+- **Approval required:** Always wait for explicit user approval before finalizing and storing an ICL.
+- **Traceability:** Reference related specs and research for full context.
+- **Naming:** Use ISO8601 UTC timestamps for filenames, e.g., `2025-01-15T14-30.md`.
+
+This format ensures that every important change is documented, reviewed, and easy to audit.
 
 ## Directory Structure
 
@@ -39,7 +111,7 @@ Buford/
 └── buford.png               # Buford avatar (currently broken)
 ```
 
-## Agent System
+## Subagent System
 
 ### 🟠 Buford (Router Agent)
 **Primary interface and traffic coordinator**
@@ -93,32 +165,34 @@ Buford/
 
 ```mermaid
 flowchart TD
-    A[User Request] --> B[Buford Router]
-    B --> C[Spec Engineer]
-    C --> D[Context Manager<br/>Gather Context]
-    D --> C
-    C --> E[Present Spec to User]
-    E --> F{User Approves?}
-    F -->|No| G[Revise Spec]
-    G --> E
-    F -->|Yes| H[Coder Agent]
-    H --> I[Implement Code]
-    I --> J[Present Implementation]
-    J --> K{User Approves?}
-    K -->|No| L[Discuss & Revise]
-    L --> I
-    K -->|Yes| M[Context Manager<br/>Create ICL]
-    M --> N[Complete]
-    
-    style F fill:#ffcccc
-    style K fill:#ffcccc
-    style C fill:#cce5ff
-    style H fill:#ccffcc
-    style D fill:#fff2cc
-    style M fill:#fff2cc
+  Z[User Clears Context] --> A[User Request]
+  A --> B[Buford Router]
+  B --> C[Spec Engineer]
+  C --> D[Context Manager<br/>Gather Context]
+  D --> C
+  C --> E[Present Spec to User]
+  E --> F{User Approves?}
+  F -->|No| G[Revise Spec]
+  G --> E
+  F -->|Yes| H[Coder Agent]
+  H --> I[Implement Code]
+  I --> J[Present Implementation]
+  J --> K{User Approves?}
+  K -->|No| L[Discuss & Revise]
+  L --> I
+  K -->|Yes| M[Context Manager<br/>Create ICL]
+  M --> N[Complete]
+  
+  style F fill:#ffcccc
+  style K fill:#ffcccc
+  style C fill:#cce5ff
+  style H fill:#ccffcc
+  style D fill:#fff2cc
+  style M fill:#fff2cc
 ```
 
 ### Critical Rules ⚠️
+- **ALWAYS clear the context before starting a new spec**
 - **NEVER skip the spec writing phase**
 - **NEVER implement before spec approval**
 - **NEVER use coder agent without an approved spec**
@@ -130,27 +204,11 @@ flowchart TD
 ### Starting a New Feature
 ```
 # User initiates with Buford
-@buford I need OAuth2 authentication for the API
-
-# Buford routes to spec engineer
-@spec_engineer I need OAuth2 authentication for the API
-
-# Spec engineer gathers context and creates spec
-# After user approval, implementation begins
-@coder Implement the OAuth2 authentication per approved spec
+@buford lets crank up the next spec: "OAuth authentication". Check this link for reference: https://clerk.com/docs/custom-flows/oauth-connections and implement oauth authentication <rest of your requirements here>...
 ```
 
-### Research-Heavy Features
-```
-# For features requiring external research
-@buford I need to implement WebRTC for video calls
+Buford will tell the spec_engineer to write a spec according to the template and will automatically use the web researcher agent to read the spec. After that, Buford will ask to you to review the generated spec and approve it or provide corrections. Once you approve, Buford will hand over to the coder for implementation. Once finished, Buford will again ask you to test the new features and approve or comment. When you approve, the spec_engineer will write the ICL file. After that you can use the ```/commit``` command to commit the change.
 
-# May route through web researcher first
-@web_researcher Research WebRTC implementation best practices
-
-# Then proceed through normal workflow
-@spec_engineer Create spec for WebRTC implementation based on research
-```
 
 ## Templates
 
@@ -190,58 +248,3 @@ Context files follow `specs/templates/icl-template.md`:
 ## Next Steps / Open Questions
 ```
 
-## Best Practices
-
-### Development Guidelines
-- **Unit tests by default** - except for pure UI code
-- **Split large files** - improves code quality and readability
-- **Component-based architecture** - keep files manageable (~300 lines)
-- **Follow existing patterns** - adhere to established project conventions
-
-### Documentation Maintenance
-- **Keep README current** - expand when adding new features
-- **Update diagrams** - when workflow changes
-- **Review templates** - ensure they match current practices
-- **Check file references** - verify links and paths remain valid
-
-### Context Management
-- **Read recent context** - always check `specs/context/` before starting work
-- **Create ICL files** - document decisions and implementations
-- **Reference external docs** - link to research in `specs/static/`
-- **Maintain traceability** - connect specs to implementations to context
-
-## Anti-Documentation Rot
-
-To prevent documentation from becoming outdated:
-
-### Contributor Checklist
-- [ ] README reflects current agent capabilities
-- [ ] Workflow diagram matches actual process
-- [ ] Templates are up-to-date with current practices
-- [ ] Examples use current syntax and patterns
-- [ ] Links and file references are valid
-
-### Maintenance Schedule
-- **After major changes**: Update relevant documentation sections
-- **Monthly review**: Check for broken links and outdated examples
-- **Quarterly audit**: Comprehensive review of all documentation
-
-## Git Workflow
-
-The system includes automated commit guidance via `.claude/commands/commit.md`:
-- **Atomic commits** - group logically related changes
-- **Imperative messages** - "Add X", "Update Y", "Refactor Z"
-- **Focus on intent** - capture reasoning, not just mechanical changes
-- **User ownership** - commits attributed to user, not AI
-
-## Contributing
-
-1. **Follow the workflow** - use the mandatory agent sequence
-2. **Write readable code** - remember the 80/20 principle
-3. **Test by default** - create unit tests unless explicitly exempted
-4. **Document decisions** - create ICL files for significant changes
-5. **Keep docs current** - update README and relevant documentation
-
----
-
-*Built with Claude and designed for human-readable development. Remember: code is written once but read many times.*
