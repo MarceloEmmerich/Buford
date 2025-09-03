@@ -51,7 +51,7 @@ It worked, but was "heavy". Most small- to mid-sized projects do not want to hav
 That's when Buford was born. It is a drastic simplification of the above system. it uses only the file system for context and specs, has no MCP server per default, and uses the git CLI to generate commits through a Claude Code custom command. 
 
 ## ICL format
-The **ICL (Intentional Context Log) format** is a structured markdown file used to capture the context, decisions, and rationale behind significant development milestones. Each ICL file is timestamped and stored in `specs/context/`. The format ensures traceability and helps agents (and humans) understand why and how changes were made.
+The **ICL (Intentional Context Layer) format** is a structured markdown file used to capture the context, decisions, and rationale behind significant development milestones. Each ICL file is timestamped and stored in `specs/context/`. The format ensures traceability and helps agents (and humans) understand why and how changes were made.
 
 ### ICL File Structure
 
