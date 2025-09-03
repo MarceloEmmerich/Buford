@@ -2,7 +2,7 @@ Buford - Multi-Agent Development System
 
 > A minimalistic Claude-based multi-agent system designed for specification-driven development.
 
-![Buford Avatar](buford.png)
+![Buford Avatar](Buford.png)
 
 ## Overview
 
