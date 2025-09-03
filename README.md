@@ -15,7 +15,7 @@ Buford works best for small to mid size projects.
 ## Dependencies
 
 Buford has very little dependencies:
-- Claude Code (althoug it is very easy to adapt to other ai coding tools)
+- Claude Code (although it is very easy to adapt to other ai coding tools)
 - git
 - bash
 
