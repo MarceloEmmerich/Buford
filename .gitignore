@@ -1,0 +1,185 @@
+# Buford Multi-Agent System .gitignore
+
+# ==========================================
+# Claude AI & Agent-specific files
+# ==========================================
+
+# Claude local settings (contains API keys and permissions)
+.claude/settings.local.json
+
+# Claude cache and temporary files
+.claude/cache/
+.claude/tmp/
+.claude/.cache/
+
+# Agent conversation logs and debug files
+*.agent.log
+.agent-debug/
+agent-state-*.json
+
+# ICL context files that are work-in-progress or temporary
+specs/context/*_draft.md
+specs/context/*_tmp.md
+specs/context/.drafts/
+
+# Research files that failed to download or are incomplete
+specs/static/*_incomplete.md
+specs/static/*_failed.md
+specs/static/.downloads/
+
+# ==========================================
+# Development Environment
+# ==========================================
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets.json
+config.local.*
+
+# IDE and Editor files
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ==========================================
+# Node.js / JavaScript (if used for tooling)
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ==========================================
+# Python (if used for tooling)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+
+# ==========================================
+# Logs and Debugging
+# ==========================================
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+debug.log
+error.log
+
+# ==========================================
+# Temporary and Cache Files
+# ==========================================
+*.tmp
+*.temp
+.tmp/
+.cache/
+*.cache
+.sass-cache/
+
+# Build artifacts
+dist/
+build/
+out/
+*.build
+
+# ==========================================
+# macOS Specific
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# ==========================================
+# Git and Version Control
+# ==========================================
+*.orig
+*.rej
+.git/hooks/pre-commit.local
+
+# ==========================================
+# Testing and Coverage
+# ==========================================
+coverage/
+.coverage
+.nyc_output
+test-results/
+*.test.log
+
+# ==========================================
+# Documentation Build Artifacts
+# ==========================================
+docs/build/
+site/
+.mkdocs/
+
+# ==========================================
+# Backup Files
+# ==========================================
+*.bak
+*.backup
+*~
+.#*
+#*#
+
+# ==========================================
+# Project-specific exclusions
+# ==========================================
+
+# Broken or corrupted assets (like the current buford.png with auth errors)
+*.png.corrupted
+*.svg.corrupted
+
+# Large binary files that shouldn't be in version control
+*.mp4
+*.avi
+*.mov
+*.zip
+*.tar.gz
+*.dmg
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Personal notes and scratch files
+NOTES.md
+scratch.md
+todo.personal.md
