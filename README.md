@@ -31,7 +31,7 @@ See the [History](#history) section below for more details on how this came to l
 
 In the beginning of 2025, I was working as a contractor for a large household device manufacturer. My job was to work on the ultimate ai assisted developer workflow. I read every paper and every blog I could find about programming with AI. This broad analysis resulted in a number of key insights:
 
-1. Try to avoid using more than 40% of the context window of any LLM. That's the decay threshold. After that, pretty much all LLM start to hallucinate of at least fail to find specific "needles in the haystack". The following insights are an immediate result of this:
+1. Try to avoid using more than 40% of the context window of any LLM. That's the decay threshold. After that, pretty much all LLM start to hallucinate or at least fail to find specific "needles in the haystack". The following insights are an immediate result of this:
    * Using subagents is a viable way to reduce context, since each subagent has it's own context window
    * Developing in short iterations keeps the context small
 2. A memory system is a must. It greatly reduces the amount of context and also increases speed and correctness. Without a memory system, the LLM starts each task by grepping through all files trying to find context.
@@ -161,7 +161,7 @@ Buford/
 - **Output**: Structured markdown with timestamps, sources, and extracted details
 - **Priority**: Official documentation over forums or unverified sources
 
-## Mandatory Workflow
+## Workflow
 
 ```mermaid
 flowchart TD
@@ -204,10 +204,17 @@ flowchart TD
 ### Starting a New Feature
 ```
 # User initiates with Buford
-@buford lets crank up the next spec: "OAuth authentication". Check this link for reference: https://clerk.com/docs/custom-flows/oauth-connections and implement oauth authentication <rest of your requirements here>...
+@buford lets crank up the next spec: "OAuth authentication". 
+Check this link for reference: https://clerk.com/docs/custom-flows/oauth-connections 
+and implement oauth authentication <rest of your requirements here>...
 ```
 
-Buford will tell the spec_engineer to write a spec according to the template and will automatically use the web researcher agent to read the spec. After that, Buford will ask to you to review the generated spec and approve it or provide corrections. Once you approve, Buford will hand over to the coder for implementation. Once finished, Buford will again ask you to test the new features and approve or comment. When you approve, the spec_engineer will write the ICL file. After that you can use the ```/commit``` command to commit the change.
+* Buford will tell the spec_engineer to write a spec according to the template and will automatically use the web researcher agent to read the spec. 
+* After that, Buford will ask to you to review the generated spec and approve it or provide corrections. 
+* Once you approve, Buford will hand over to the coder for implementation. 
+* Once finished, Buford will again ask you to test the new features and approve or comment. 
+* When you approve, the spec_engineer will write the ICL file. 
+* After that you can use the ```/commit``` command to commit the change.
 
 
 ## Templates
