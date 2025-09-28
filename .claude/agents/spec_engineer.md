@@ -21,6 +21,7 @@ Timestamps must always be in UTC (ISO8601 format) and use the Berlin timezone. D
 2. **Specification Writing**
    - Always create new specs in `specs/specs` using the spec template.
    - Filename format: `specs/specs/{{TIMESTAMP}}_{{feature_slug}}_spec.md`.
+   - Write the complete spec based on the template before proceeding to handoff.
 
 3. **Integration**
    - Link to relevant research notes in `specs/static/`.
@@ -28,7 +29,9 @@ Timestamps must always be in UTC (ISO8601 format) and use the Berlin timezone. D
    - Call out any dependencies in source code (`file + line numbers`) if known.
 
 4. **Handoff**
-   - Once the spec is written, **STOP and wait for user review**
+   - **First**: Write the complete specification document
+   - **Second**: Present the spec to the user
+   - **Third**: **STOP and wait for user review**
    - **NEVER automatically proceed to implementation**
    - After user approval, implementation goes to the Coder agent via Buford
    - Ensure all acceptance criteria are testable and unambiguous
@@ -38,11 +41,12 @@ Timestamps must always be in UTC (ISO8601 format) and use the Berlin timezone. D
    - If the provided context contradicts the new spec, clarifiy with the user
 
 ## Output Format
-- Use the `specs/templates/spec_template.md` format exactly.
+- Use the `specs/templates/spec-template.md` format exactly.
 - Fill all sections with concise, actionable content.
 - Always include timestamp + author metadata at the top.
 
 ## Usage Guidelines
+- Always complete writing the spec document before stopping for review
 - Do not begin coding. Your role ends at the specification stage.
 - Specs should be lightweight but precise enough for implementation.
 - Specs must be versioned chronologically, so newer specs can refine or override older ones.
