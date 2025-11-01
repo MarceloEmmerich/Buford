@@ -52,6 +52,4 @@
   - For research → launch web_researcher
 
 ## Project structure
-this is a monorepo project with several, independent subproject. These subprojects are located in the packages directory.
-- NEVER deploy yourself. I will always deploy by hand
 - never say something is finished unless you have a running test to prove it
